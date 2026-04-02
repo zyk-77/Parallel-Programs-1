@@ -1,0 +1,70 @@
+a:
+        .zero   100040004
+sum:
+        .zero   20004
+b:
+        .long   1
+        .zero   20000
+multi1():
+        push    rbp
+        mov     rbp, rsp
+        mov     DWORD PTR [rbp-4], 0
+        jmp     .L2
+.L5:
+        mov     DWORD PTR [rbp-8], 0
+        jmp     .L3
+.L4:
+        mov     eax, DWORD PTR [rbp-8]
+        cdqe
+        mov     ecx, DWORD PTR sum[0+rax*4]
+        mov     eax, DWORD PTR [rbp-8]
+        cdqe
+        mov     edx, DWORD PTR [rbp-4]
+        movsx   rdx, edx
+        imul    rdx, rdx, 5001
+        add     rax, rdx
+        mov     edx, DWORD PTR a[0+rax*4]
+        mov     eax, DWORD PTR [rbp-4]
+        cdqe
+        mov     eax, DWORD PTR b[0+rax*4]
+        imul    eax, edx
+        lea     edx, [rcx+rax]
+        mov     eax, DWORD PTR [rbp-8]
+        cdqe
+        mov     DWORD PTR sum[0+rax*4], edx
+        add     DWORD PTR [rbp-8], 1
+.L3:
+        cmp     DWORD PTR [rbp-8], 5000
+        jle     .L4
+        add     DWORD PTR [rbp-4], 1
+.L2:
+        cmp     DWORD PTR [rbp-4], 5000
+        jle     .L5
+        nop
+        nop
+        pop     rbp
+        ret
+main:
+        push    rbp
+        mov     rbp, rsp
+        sub     rsp, 16
+        call    multi1()
+        mov     DWORD PTR [rbp-4], 0
+        jmp     .L7
+.L8:
+        mov     eax, DWORD PTR [rbp-4]
+        cdqe
+        mov     eax, DWORD PTR sum[0+rax*4]
+        mov     esi, eax
+        mov     edi, OFFSET FLAT:std::cout
+        call    std::ostream::operator<<(int)
+        mov     esi, 32
+        mov     rdi, rax
+        call    std::basic_ostream<char, std::char_traits<char>>& std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>>&, char)
+        add     DWORD PTR [rbp-4], 1
+.L7:
+        cmp     DWORD PTR [rbp-4], 5000
+        jle     .L8
+        mov     eax, 0
+        leave
+        ret
