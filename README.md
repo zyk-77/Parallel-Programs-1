@@ -4,3 +4,4 @@
 - ordinary2和optimize2是前n项和
 - opti2是对前n项和用递归优化**复杂度log(n)的**技术
 - 1.cpp是用**宏/模板**技术优化前n项和
+- 15.2汇编代码是对optimize1的反汇编
